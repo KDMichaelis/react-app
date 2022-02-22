@@ -1,0 +1,12 @@
+name: Notfiy on Issue
+on:
+  issues:
+    type: [opened]
+jobs:
+  slack-message:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Slack Message
+        run: |
+          echo "Here a Slack message would be created but the step was skipped"
+          # curl -X POST -H 'Content-type: application/json' --data '{"text":"New issue created <${{ github.event.issue.html_url }}|${{ github.event.issue.title }}.>"}' ${{ secrets.SLACK_WEBHOOK }}
