@@ -11,7 +11,7 @@ jobs:
           title: Title
           body: Body
           assignees: |
-            'KDMichaelis'
+            KDMichaelis
       - run: |
           echo ${{ steps.issue.outputs.issue }}
       - uses: ./.github/actions/hello
