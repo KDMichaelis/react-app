@@ -50,7 +50,7 @@ module.exports = /******/ (function (modules, runtime) {
   /******/ // the startup function
   /******/ function startup() {
     /******/ // Load entry module and return exports
-    /******/ return __webpack_require__(239);
+    /******/ return __webpack_require__(482);
     /******/
   }
   /******/
@@ -998,39 +998,6 @@ module.exports = /******/ (function (modules, runtime) {
       }
       exports.PersonalAccessTokenCredentialHandler =
         PersonalAccessTokenCredentialHandler;
-
-      /***/
-    },
-
-    /***/ 239: /***/ function (
-      __unusedmodule,
-      __unusedexports,
-      __webpack_require__
-    ) {
-      const core = __webpack_require__(470);
-      const github = __webpack_require__(469);
-
-      try {
-        //throw(new Error("some error message"));
-
-        core.debug("Debug message");
-        core.warning("Warning message");
-        core.error("Error message");
-
-        const name = core.getInput("who-to-greet");
-        core.setSecret(name);
-        console.log("Hello ${name}");
-
-        const time = new Date();
-        core.setOutput("time", time.toTimeString());
-
-        core.startGroup("Logging github object");
-        console.log(JSON.stringify(github, null, "\t"));
-        core.endGroup();
-        core.exportVariable("HELLO", "hello");
-      } catch (error) {
-        core.setFailed(error.message);
-      }
 
       /***/
     },
@@ -5105,6 +5072,42 @@ module.exports = /******/ (function (modules, runtime) {
       }
       exports.getIDToken = getIDToken;
       //# sourceMappingURL=core.js.map
+
+      /***/
+    },
+
+    /***/ 482: /***/ function (
+      __unusedmodule,
+      __unusedexports,
+      __webpack_require__
+    ) {
+      const core = __webpack_require__(470);
+      const github = __webpack_require__(469);
+
+      async function run() {
+        try {
+          const token = core.getInput("token");
+          const title = core.getInput("title");
+          const body = core.getInput("body");
+          const assignees = core.getInput("assignees");
+
+          const octokit = new github.Github(token);
+          const response = await octokit.issues.create({
+            //owner: github.context.repo.owner,
+            //repo: github.context.repo.repo,
+            ...github.context.repo,
+            title,
+            body,
+            assignees: assignees ? assignees.split("\n") : undefined,
+          });
+
+          core.setOutput("issue", JSON.stringify(response.data));
+        } catch (error) {
+          core.setFailed(error.message);
+        }
+      }
+
+      run();
 
       /***/
     },
